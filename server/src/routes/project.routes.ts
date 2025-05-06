@@ -1,7 +1,13 @@
 import { NextFunction, Request, Response, Router } from 'express';
+import { z } from 'zod';
 import { client } from '../database/client';
 
 const router = Router();
+
+const projectSchema = z.object({
+  name: z.string().min(1, { message: 'Name is required at least 1 character' }),
+  description: z.string().min(1, { message: 'Description is required at least 1 character' }),
+});
 
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -63,9 +69,12 @@ router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
 
 router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { name, description } = req.body;
-    const result = await client.query('INSERT INTO projects (name, description) VALUES ($1, $2) RETURNING *', [name, description]);
-    res.status(201).json(result.rows[0]);
+    const { success, data, error } = projectSchema.safeParse(req.body);
+    if (!success) {
+      return res.status(400).json({ error });
+    }
+    const result = await client.query('INSERT INTO projects (name, description) VALUES ($1, $2) RETURNING *', [data.name, data.description]);
+    return res.status(201).json(result.rows[0]);
   } catch (error) {
     next(new Error('Error creating project'));
   }
@@ -74,9 +83,12 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
 router.put('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const { name, description } = req.body;
-    const result = await client.query('UPDATE projects SET name = $1, description = $2 WHERE id = $3 RETURNING *', [name, description, id]);
-    res.json(result.rows[0]);
+    const { success, data, error } = projectSchema.safeParse(req.body);
+    if (!success) {
+      return res.status(400).json({ error });
+    }
+    const result = await client.query('UPDATE projects SET name = $1, description = $2 WHERE id = $3 RETURNING *', [data.name, data.description, id]);
+    return res.json(result.rows[0]);
   } catch (error) {
     next(new Error('Error updating project'));
   }

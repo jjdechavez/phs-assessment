@@ -131,6 +131,70 @@ npm run dev
 }
 ```
 
+### Bonus - I added other CRUD endpoints
+
+### GET `/api/projects/:id`
+
+- **URL Parameters:**
+  - `id`: Project ID
+
+- **Response:**
+```json
+{
+  "id": 1,
+  "name": "Project Name",
+  "description": "Project Description"
+}
+```
+
+### POST `/api/projects`
+
+- **Request Body:**
+```json
+{
+  "name": "Project Name",
+  "description": "Project Description"
+}
+```
+
+- **Response:** (Status: 201 Created)
+```json
+{
+  "id": 1,
+  "name": "Project Name",
+  "description": "Project Description"
+}
+```
+
+### PUT `/api/projects/:id`
+
+- **URL Parameters:**
+  - `id`: Project ID
+
+- **Request Body:**
+```json
+{
+  "name": "Updated Project Name",
+  "description": "Updated Project Description"
+}
+```
+
+- **Response:**
+```json
+{
+  "id": 1,
+  "name": "Updated Project Name",
+  "description": "Updated Project Description"
+}
+```
+
+### DELETE `/api/projects/:id`
+
+- **URL Parameters:**
+  - `id`: Project ID
+
+- **Response:** (Status: 204 No Content)
+
 ---
 
 ## Troubleshooting
