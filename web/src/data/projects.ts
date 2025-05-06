@@ -1,0 +1,1 @@
+export const projectURL = new URL(import.meta.env.VITE_SERVER_URL + "/api/projects");
