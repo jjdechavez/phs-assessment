@@ -8,7 +8,7 @@ import { Spinner } from "./base/spinner";
 export function ProjectList() {
   const [projects, setProjects] = useState<Array<Project>>([]);
   const [loading, setLoading] = useState(false);
-  const [searchName, setSearchName] = useState<string | null>(null);
+  const [searchName, setSearchName] = useState("");
   const [searchQuery] = useDebounce(searchName, 1200);
   const [isSearching, setIsSearching] = useState(false);
   const [searched, setSearched] = useState(false);
@@ -38,9 +38,9 @@ export function ProjectList() {
   }, []);
 
   useEffect(() => {
-    const searchProjects = async (search: string | null) => {
+    const searchProjects = async (search: string) => {
       try {
-        if (search && search.length > 0) {
+        if (search.length > 0) {
           projectURL.searchParams.set("s", search);
         } else {
           projectURL.searchParams.delete("s");
